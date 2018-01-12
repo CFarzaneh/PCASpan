@@ -78,8 +78,8 @@ for j in tqdm(range(100)):
 	# print(weights.shape)
 	# print(weights[:,0])
 
-a1 = np.concatenate((arr,weights[:,0]*5))
-a2 = np.concatenate((arr,weights[:,1]*5))
+a1 = np.concatenate((arr,weights[:,0]*25))
+a2 = np.concatenate((arr,weights[:,1]*25))
 
 soaa = np.array([a1,a2])
 
