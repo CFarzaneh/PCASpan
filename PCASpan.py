@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from scipy import linalg
-from VAE_Models.VAE import VAE as model
-from VAE_Models.architectures import DNN
+from VAE_Models.VAE_Models.VAE import VAE as model
+from VAE_Models.VAE_Models.architectures import DNN
 import tensorflow as tf
 
 def genData():
@@ -49,21 +49,22 @@ plt.show()
 
 print("\nRunning Linear Autoencoder with two dimensional latency space...\n")
 
-input_dim = 3
+input_dim = (3,1)
 latency_dim = 2
-theEncoder = 3 # num neurons in each layer of encoder network
-theDecoder = 3 # num neurons in each layer of generator network
+theEncoder = [] # num neurons in each layer of encoder network
+theDecoder = [] # num neurons in each layer of generator network
 
 batch_size=100
 learning_rate=0.001
 
-encoder = DNN(theEncoder, tf.nn.relu)
-decoder = DNN(theDecoder, tf.nn.relu)
+encoder = DNN(theEncoder)
+decoder = DNN(theDecoder)
 
 hyperParams = {'reconstruct_cost': 'gaussian',
 			   'learning_rate': learning_rate,
 			   'optimizer': tf.train.AdamOptimizer,
-			   'batch_size': batch_size
+			   'batch_size': batch_size,
+			   'variational': False
 			  }
 
 autoEncoder = model(input_dim, encoder, latency_dim, decoder, hyperParams)

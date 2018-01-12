@@ -35,12 +35,14 @@ class DNN(Neural_Network):
     """Deep Neural Network - Standard Multilayer Perceptron model (MLP)"""
 
 
-    def __init__(self, architecture, transfer_funcs):
+    def __init__(self, architecture, transfer_funcs=None):
         Neural_Network.__init__(self, architecture)
 
         # The below is hardly error proof. It is just a few minor checks to help
         # with debugging. Eventually it will need to be bolstered further (check
         # architecture too)
+        if transfer_funcs is None: # Default to Linear activation function
+            transfer_funcs = lambda x: x
         if hasattr(transfer_funcs, '__iter__'): # Check to see if it is iterable
             # If it is iterable that means they put in a list or tuple (hopefully)
             # in which case they must specify an actiavation func for each layer
@@ -59,6 +61,7 @@ class DNN(Neural_Network):
 
         with tf.name_scope(scope):
             self.dtype = dtype
+            self.input_shape = input_shape
             num_prev_nodes = input_shape if isinstance(input_shape, int) else np.prod(input_shape[:-1])
             # Currently I am not keeping track of the output between layers
             current_input = network_input
@@ -81,8 +84,10 @@ class DNN(Neural_Network):
 
     def get_output_shape(self):
 
-        output_layer = self.architecture[-1]
-        return output_layer
+        if len(self.architecture) == 0:
+            return self.input_shape[0]
+        else:
+            return self.architecture[-1]
 
 
 class CNN(Neural_Network):
