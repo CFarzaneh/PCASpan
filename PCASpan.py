@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from scipy import linalg
-from VAE_Models.VAE_Models.VAE import VAE as model
-from VAE_Models.VAE_Models.architectures import DNN
+from VAE_Models.VAE import VAE as model
+from VAE_Models.architectures import DNN
 import tensorflow as tf
 
 def genData():
