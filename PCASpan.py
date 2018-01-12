@@ -67,15 +67,16 @@ hyperParams = {'reconstruct_cost': 'gaussian',
 			   'variational': False
 			  }
 
-autoEncoder = model(input_dim, encoder, latency_dim, decoder, hyperParams)
+for j in tqdm(range(100)):
+	autoEncoder = model(input_dim, encoder, latency_dim, decoder, hyperParams)
 
-for i in tqdm(range(10000)):
-	cost, reconstr_loss, KL_loss = autoEncoder(genData(batch_size))
+	for i in tqdm(range(100)):
+		cost, reconstr_loss, KL_loss = autoEncoder(genData(10))
 
-weights = autoEncoder.get_latent_weights()[0]
+	# weights = np.asarray(autoEncoder.get_latent_weights()[0])
 
-print(weights)
-print(weights[:,0])
+	# print(weights.shape)
+	# print(weights[:,0])
 
 a1 = np.concatenate((arr,weights[:,0]*5))
 a2 = np.concatenate((arr,weights[:,1]*5))
