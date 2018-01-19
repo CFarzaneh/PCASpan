@@ -6,6 +6,7 @@ from VAE_Models.VAE import VAE as model
 from VAE_Models.architectures import DNN
 import tensorflow as tf
 from tqdm import tqdm
+import sys
 
 def genData(size):
     dataset = np.ndarray((size,3))
@@ -55,7 +56,7 @@ theEncoder = [] # num neurons in each layer of encoder network
 theDecoder = [] # num neurons in each layer of generator network
 
 batch_size=1000
-learning_rate=0.001
+learning_rate=0.002
 
 encoder = DNN(theEncoder)
 decoder = DNN(theDecoder)
@@ -70,9 +71,18 @@ hyperParams = {'reconstruct_cost': 'gaussian',
 for j in tqdm(range(50)):
         autoEncoder = model(input_dim, encoder, latency_dim, decoder, hyperParams)
 
-        for i in tqdm(range(1000)):
-                cost, reconstr_loss, KL_loss = autoEncoder(genData(100))
-
+        for i in tqdm(range(10000)):
+                data = genData(batch_size)
+                #print("Data = ", data)
+                cost, reconstr_loss, KL_loss = autoEncoder(data)
+                '''
+                print("output = ", autoEncoder.reconstruct(data))
+                print("cost = ", cost)
+                print("alpha = ", autoEncoder.alpha)
+                print("reconstruction loss = ", reconstr_loss)
+                print("KL_Loss = ", KL_loss)
+                sys.exit()
+                '''
         weights = autoEncoder.get_latent_weights()[0]
         weights = weights.transpose()
         print(weights)
@@ -80,13 +90,13 @@ for j in tqdm(range(50)):
 
         a1 = np.concatenate((arr,weights[0]*5))
         a2 = np.concatenate((arr,weights[1]*5))
-
+        
         soaa = np.array([a1,a2])
 
         X, Y, Z, U, V, W = zip(*soaa)
 
         ax.quiver(X, Y, Z, U, V, W, color='g')
 
-       	autoEncoder.reset()
+        autoEncoder.reset()
 
 plt.show()
