@@ -70,15 +70,16 @@ class AutoEncoder(nn.Module):
         return encoded, decoded
 
 autoencoder = AutoEncoder()
+autoencoder.cuda()
 
 optimizer = torch.optim.Adam(autoencoder.parameters(), lr=LearningRate)
 loss_func = nn.MSELoss()
 
 for _ in tqdm(range(50)):
 	for i in tqdm(range(10000)):
-		x = torch.Tensor(genData(Batch_Size))
-		b_x = Variable(x.view(-1, 3))
-		b_y = Variable(x.view(-1, 3))
+		x = torch.Tensor(genData(Batch_Size)).cuda()
+		b_x = Variable(x.view(-1, 3)).cuda()
+		b_y = Variable(x.view(-1, 3)).cuda()
 
 		encoded, decoded = autoencoder(b_x)
 
