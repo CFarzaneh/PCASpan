@@ -40,7 +40,7 @@ v3 = np.concatenate((arr,v[:,2]*5))
 fig = plt.figure()
 ax = Axes3D(fig)
 
-soa = np.array([v1,v2,v3])
+soa = np.array([v1,v3])
 
 X, Y, Z, U, V, W = zip(*soa)
 
@@ -58,10 +58,10 @@ class AutoEncoder(nn.Module):
         super(AutoEncoder, self).__init__()
 
         self.encoder = nn.Sequential(
-            nn.Linear(3, 2),
+            nn.Linear(3, 2)
         )
         self.decoder = nn.Sequential(
-            nn.Linear(2, 3),
+            nn.Linear(2, 3)
         )
 
     def forward(self, x):
@@ -69,8 +69,7 @@ class AutoEncoder(nn.Module):
         decoded = self.decoder(encoded)
         return encoded, decoded
 
-autoencoder = AutoEncoder()
-autoencoder.cuda()
+autoencoder = AutoEncoder().cuda()
 
 optimizer = torch.optim.Adam(autoencoder.parameters(), lr=LearningRate)
 loss_func = nn.MSELoss()
@@ -78,8 +77,8 @@ loss_func = nn.MSELoss()
 for _ in tqdm(range(50)):
 	for i in tqdm(range(10000)):
 		x = torch.Tensor(genData(Batch_Size)).cuda()
-		b_x = Variable(x.view(-1, 3)).cuda()
-		b_y = Variable(x.view(-1, 3)).cuda()
+		b_x = Variable(x.view(-1, 3))
+		b_y = Variable(x.view(-1, 3))
 
 		encoded, decoded = autoencoder(b_x)
 
@@ -88,7 +87,7 @@ for _ in tqdm(range(50)):
 		loss.backward()
 		optimizer.step()
 
-	weights = autoencoder.encoder[0].weight.data.numpy()
+	weights = autoencoder.encoder[0].weight.data.cpu().numpy()
 
 	a1 = np.concatenate((arr,weights[0]*5))
 	a2 = np.concatenate((arr,weights[1]*5))
